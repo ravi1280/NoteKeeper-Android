@@ -12,6 +12,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.notes.model.SQLiteHelper;
+
 public class CreateNoteActivity extends AppCompatActivity {
 
     @Override
@@ -32,12 +34,13 @@ public class CreateNoteActivity extends AppCompatActivity {
                 EditText contend =findViewById(R.id.editTextText02);
 
                 if(title.getText().toString().isEmpty()){
-                    Toast.makeText(CreateNoteActivity.this,"Plrase Fill Tittle Field",Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateNoteActivity.this,"Please Fill Tittle Field",Toast.LENGTH_LONG).show();
 
                 } else if (contend.getText().toString().isEmpty()) {
-                    Toast.makeText(CreateNoteActivity.this,"Plrase Fill Content Field",Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateNoteActivity.this,"Please Fill Content Field",Toast.LENGTH_LONG).show();
                 }else {
-                    //save SQLite
+                    //save note
+
                 }
             }
         });
