@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Note Book</string>
+    <string name="tv1">My Note Book</string>
+    <string name="b1">Create New Note</string>
+    <string name="Ctv1">Title</string>
+    <string name="Ctv2">Content</string>
+    <string name="Cb2">Save Note</string>
+</resources>
