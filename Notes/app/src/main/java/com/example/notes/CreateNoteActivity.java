@@ -1,6 +1,9 @@
 package com.example.notes;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +16,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.notes.model.SQLiteHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CreateNoteActivity extends AppCompatActivity {
 
@@ -40,7 +46,40 @@ public class CreateNoteActivity extends AppCompatActivity {
                     Toast.makeText(CreateNoteActivity.this,"Please Fill Content Field",Toast.LENGTH_LONG).show();
                 }else {
                     //save note
+                    SQLiteHelper sqLiteHelper = new SQLiteHelper(
+                            CreateNoteActivity.this,
+                            "mynotebook.db",
+                            null,
+                            1
+                    );
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                           SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
+                            ContentValues contentValues = new ContentValues();
+                            contentValues.put("title",title.getText().toString());
+                            contentValues.put("content",contend.getText().toString());
 
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+                            contentValues.put("date_created",simpleDateFormat.format(new Date()));
+
+                            long insertId = sqLiteDatabase.insert("notes", null, contentValues);
+                            Log.i("AppNote", String.valueOf(insertId));
+
+                            sqLiteDatabase.close();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    title.setText("");
+                                    contend.setText("");
+                                    title.requestFocus();
+                                    Toast.makeText(CreateNoteActivity.this,"Success",Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+
+                        }
+                    }).start();
                 }
             }
         });
