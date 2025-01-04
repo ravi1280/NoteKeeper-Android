@@ -77,12 +77,10 @@ public class CreateNoteActivity extends AppCompatActivity {
                                 }
                             });
 
-
                         }
                     }).start();
                 }
             }
         });
-
     }
 }
