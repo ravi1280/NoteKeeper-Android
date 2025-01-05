@@ -78,10 +78,10 @@ public class MainActivity extends AppCompatActivity {
                    }
                });
 
-              while (cursor.moveToNext()){
-                 String title = cursor.getString(1);
-                  Log.i("AppNote", String.valueOf(title));
-              }
+//              while (cursor.moveToNext()){
+//                 String title = cursor.getString(1);
+//                  Log.i("AppNote", String.valueOf(title));
+//              }
 
 
             }
@@ -123,7 +123,7 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
         Log.i("AppNote",String.valueOf(position));
-        cursor.move(position);
+        cursor.moveToPosition(position);
 
         Log.i("AppNote",cursor.getString(1));
 
