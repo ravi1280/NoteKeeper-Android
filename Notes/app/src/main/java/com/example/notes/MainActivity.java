@@ -1,7 +1,10 @@
 package com.example.notes;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.notes.model.SQLiteHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +41,39 @@ public class MainActivity extends AppCompatActivity {
                startActivity(i);
            }
        });
+
+      RecyclerView recyclerView =  findViewById(R.id.recyclerView01);
+        SQLiteHelper sqLiteHelper = new SQLiteHelper(
+                MainActivity.this,
+                "mynotebook.db",
+                null,
+                1
+        );
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+               SQLiteDatabase sqLiteDatabase = sqLiteHelper.getReadableDatabase();
+              Cursor cursor = sqLiteDatabase.query(
+                      "notes",
+                      null,
+                      null,
+                      null,
+                      null,
+                      null,
+                      "`id` DESE"
+              );
+
+              while (cursor.moveToNext()){
+                 String title = cursor.getString(1);
+                  Log.i("AppNote", String.valueOf(title));
+              }
+
+
+            }
+        }).start();
+
+     NoteAdapter noteAdapter =  new NoteAdapter();
+     recyclerView.setAdapter(noteAdapter);
     }
 }
 
