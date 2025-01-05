@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notes.model.SQLiteHelper;
@@ -42,7 +43,13 @@ public class MainActivity extends AppCompatActivity {
            }
        });
 
-      RecyclerView recyclerView =  findViewById(R.id.recyclerView01);
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView01);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         SQLiteHelper sqLiteHelper = new SQLiteHelper(
                 MainActivity.this,
                 "mynotebook.db",
@@ -63,8 +70,13 @@ public class MainActivity extends AppCompatActivity {
                       "`id` DESE"
               );
 
-                NoteAdapter noteAdapter =  new NoteAdapter(cursor);
-                recyclerView.setAdapter(noteAdapter);
+               runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+                       NoteAdapter noteAdapter =  new NoteAdapter(cursor);
+                       recyclerView.setAdapter(noteAdapter);
+                   }
+               });
 
               while (cursor.moveToNext()){
                  String title = cursor.getString(1);
@@ -110,7 +122,11 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
+        Log.i("AppNote",String.valueOf(position));
         cursor.move(position);
+
+        Log.i("AppNote",cursor.getString(1));
+
         holder.TitleView.setText(cursor.getString(1));
         holder.ContendView.setText(cursor.getString(2));
         holder.DateView.setText(cursor.getString(3));
