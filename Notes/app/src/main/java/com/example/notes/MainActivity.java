@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                       "`id` DESE"
               );
 
+                NoteAdapter noteAdapter =  new NoteAdapter(cursor);
+                recyclerView.setAdapter(noteAdapter);
+
               while (cursor.moveToNext()){
                  String title = cursor.getString(1);
                   Log.i("AppNote", String.valueOf(title));
@@ -72,12 +75,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
-     NoteAdapter noteAdapter =  new NoteAdapter();
-     recyclerView.setAdapter(noteAdapter);
+
     }
 }
 
 class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
+
+    Cursor cursor;
+
+    public NoteAdapter(Cursor cursor) {
+        this.cursor = cursor;
+    }
 
     static class NoteViewHolder extends RecyclerView.ViewHolder{
         TextView TitleView;
@@ -102,12 +110,17 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
+        cursor.move(position);
+        holder.TitleView.setText(cursor.getString(1));
+        holder.ContendView.setText(cursor.getString(2));
+        holder.DateView.setText(cursor.getString(3));
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+
+        return cursor.getCount();
     }
 
 
