@@ -49,11 +49,63 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        refreshnote();
 
+
+    }
+    private void refreshnote(){
         RecyclerView recyclerView = findViewById(R.id.recyclerView01);
 
-        X x = new X();
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(x);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT);
+//        return 0;
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Log.i("AppNote", "On Swiped");
+
+                NoteAdapter.NoteViewHolder holder = (NoteAdapter.NoteViewHolder) viewHolder;
+
+//                NoteAdapter adpter = (NoteAdapter) recyclerView.getAdapter();
+//                adpter.m(viewHolder.getAdapterPosition());
+
+                SQLiteHelper sqLiteHelper = new SQLiteHelper(
+                        viewHolder.itemView.getContext(),
+                        "mynotebook.db",
+                        null,
+                        1
+                );
+
+                new  Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
+                        int row = sqLiteDatabase.delete(
+                                "notes",
+                                "id=?",
+                                new String[]{holder.id}
+                        );
+                        Log.i("AppNote", row + "Rows Deleted");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshnote();
+                            }
+                        });
+                    }
+                }).start();
+
+            }
+        });
+
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
@@ -91,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 }
+
 
 class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
@@ -152,35 +205,6 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
             }
         });
 
-//        holder.containerView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-////                Log.i("AppNote","long clicked");
-//                SQLiteHelper sqLiteHelper = new SQLiteHelper(
-//                        view.getContext(),
-//                        "mynotebook.db",
-//                        null,
-//                        1
-//                );
-//
-//                new  Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
-//                        int row = sqLiteDatabase.delete(
-//                                "notes",
-//                                "id=?",
-//                                new String[]{id}
-//
-//                        );
-//                        Log.i("AppNote", row + "Rows Deleted");
-//
-//                    }
-//                }).start();
-//
-//                return true;
-//            }
-//        });
     }
 
     @Override
@@ -188,52 +212,17 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
         return cursor.getCount();
     }
-}
 
-
-
-
-class X extends ItemTouchHelper.Callback{
-    @Override
-    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-       return makeMovementFlags(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT);
-//        return 0;
-    }
-
-    @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        return false;
-    }
-
-    @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.i("AppNote", "On Swiped");
-
-        NoteAdapter.NoteViewHolder holder = (NoteAdapter.NoteViewHolder) viewHolder;
-
-        SQLiteHelper sqLiteHelper = new SQLiteHelper(
-                        viewHolder.itemView.getContext(),
-                        "mynotebook.db",
-                        null,
-                        1
-                );
-
-                new  Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
-                        int row = sqLiteDatabase.delete(
-                                "notes",
-                                "id=?",
-                                new String[]{holder.id}
-                        );
-                        Log.i("AppNote", row + "Rows Deleted");
-                    }
-                }).start();
-
-
+    public void m(int position){
+        //inbulid
+        notifyItemRemoved(position);
     }
 }
+
+
+
+
+
 
 
 
