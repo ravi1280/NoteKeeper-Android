@@ -124,25 +124,27 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-        Log.i("AppNote",String.valueOf(position));
+//        Log.i("AppNote",String.valueOf(position));
+
         cursor.moveToPosition(position);
 
-        String id = cursor.getString(0)
+        String id = cursor.getString(0);
+        String title = cursor.getString(1);
+        String content = cursor.getString(2);
+        String date = cursor.getString(3);
 
-        Log.i("AppNote",cursor.getString(1));
-
-        holder.TitleView.setText(cursor.getString(1));
-        holder.ContendView.setText(cursor.getString(2));
-        holder.DateView.setText(cursor.getString(3));
+        holder.TitleView.setText(title);
+        holder.ContendView.setText(content);
+        holder.DateView.setText(date);
 
         holder.containerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.i("AppNote","Clicked");
                 Intent intent = new Intent(view.getContext(),CreateNoteActivity.class);
-                intent.putExtra("id",cursor.getString(0));
-                intent.putExtra("title",cursor.getString(1));
-                intent.putExtra("content",cursor.getString(2));
+                intent.putExtra("id",id);
+                intent.putExtra("title",title);
+                intent.putExtra("content",content);
                 view.getContext().startActivity(intent);
             }
         });
