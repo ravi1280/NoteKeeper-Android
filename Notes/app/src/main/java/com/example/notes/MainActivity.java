@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,8 +50,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-
         RecyclerView recyclerView = findViewById(R.id.recyclerView01);
+
+        X x = new X();
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(x);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -102,6 +106,7 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
         TextView DateView;
 
         View containerView;
+        String id ;
         public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
             TitleView =itemView.findViewById(R.id.NtextView01);
@@ -126,7 +131,7 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
         cursor.moveToPosition(position);
 
-        String id = cursor.getString(0);
+        holder.id = cursor.getString(0);
         String title = cursor.getString(1);
         String content = cursor.getString(2);
         String date = cursor.getString(3);
@@ -140,13 +145,42 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
             public void onClick(View view) {
                 Log.i("AppNote","Clicked");
                 Intent intent = new Intent(view.getContext(),CreateNoteActivity.class);
-                intent.putExtra("id",id);
+                intent.putExtra("id",holder.id);
                 intent.putExtra("title",title);
                 intent.putExtra("content",content);
                 view.getContext().startActivity(intent);
             }
         });
 
+//        holder.containerView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+////                Log.i("AppNote","long clicked");
+//                SQLiteHelper sqLiteHelper = new SQLiteHelper(
+//                        view.getContext(),
+//                        "mynotebook.db",
+//                        null,
+//                        1
+//                );
+//
+//                new  Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
+//                        int row = sqLiteDatabase.delete(
+//                                "notes",
+//                                "id=?",
+//                                new String[]{id}
+//
+//                        );
+//                        Log.i("AppNote", row + "Rows Deleted");
+//
+//                    }
+//                }).start();
+//
+//                return true;
+//            }
+//        });
     }
 
     @Override
@@ -154,6 +188,56 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
         return cursor.getCount();
     }
-
-
 }
+
+
+
+
+class X extends ItemTouchHelper.Callback{
+    @Override
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+       return makeMovementFlags(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT);
+//        return 0;
+    }
+
+    @Override
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+        return false;
+    }
+
+    @Override
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        Log.i("AppNote", "On Swiped");
+
+        NoteAdapter.NoteViewHolder holder = (NoteAdapter.NoteViewHolder) viewHolder;
+
+        SQLiteHelper sqLiteHelper = new SQLiteHelper(
+                        viewHolder.itemView.getContext(),
+                        "mynotebook.db",
+                        null,
+                        1
+                );
+
+                new  Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
+                        int row = sqLiteDatabase.delete(
+                                "notes",
+                                "id=?",
+                                new String[]{holder.id}
+                        );
+                        Log.i("AppNote", row + "Rows Deleted");
+                    }
+                }).start();
+
+
+    }
+}
+
+
+
+
+
+
+
