@@ -1,6 +1,7 @@
 package com.example.notes;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,12 +33,28 @@ public class CreateNoteActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Intent intent = getIntent();
+       String idData = intent.getStringExtra("id");
+       String titleData = intent.getStringExtra("title");
+       String contentData = intent.getStringExtra("content");
+
+        EditText title =findViewById(R.id.editTextText01);
+        EditText contend =findViewById(R.id.editTextText02);
+
+        if(title!=null){
+            title.setText(titleData);
+
+        }
+        if (contend!=null){
+            contend.setText(contentData);
+
+        }
+
         Button btn02 = findViewById(R.id.button02);
         btn02.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText title =findViewById(R.id.editTextText01);
-                EditText contend =findViewById(R.id.editTextText02);
+
 
                 if(title.getText().toString().isEmpty()){
                     Toast.makeText(CreateNoteActivity.this,"Please Fill Tittle Field",Toast.LENGTH_LONG).show();
