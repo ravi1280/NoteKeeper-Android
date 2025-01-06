@@ -43,15 +43,12 @@ public class MainActivity extends AppCompatActivity {
                startActivity(i);
            }
        });
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshnote();
-
-
     }
     private void refreshnote(){
         RecyclerView recyclerView = findViewById(R.id.recyclerView01);
@@ -60,22 +57,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 return makeMovementFlags(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT);
-//        return 0;
             }
-
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
-
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 Log.i("AppNote", "On Swiped");
 
                 NoteAdapter.NoteViewHolder holder = (NoteAdapter.NoteViewHolder) viewHolder;
-
-//                NoteAdapter adpter = (NoteAdapter) recyclerView.getAdapter();
-//                adpter.m(viewHolder.getAdapterPosition());
 
                 SQLiteHelper sqLiteHelper = new SQLiteHelper(
                         viewHolder.itemView.getContext(),
@@ -146,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
-
     Cursor cursor;
 
     public NoteAdapter(Cursor cursor) {
@@ -204,19 +194,13 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
                 view.getContext().startActivity(intent);
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
-
         return cursor.getCount();
     }
 
-    public void m(int position){
-        //inbulid
-        notifyItemRemoved(position);
-    }
 }
 
 
