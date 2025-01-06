@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                       null,
                       null,
                       null,
-                      "`id` DESE"
+                      "`id` DESC"
               );
 
                runOnUiThread(new Runnable() {
@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
 //                 String title = cursor.getString(1);
 //                  Log.i("AppNote", String.valueOf(title));
 //              }
-
 
             }
         }).start();
@@ -103,11 +102,14 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
         TextView TitleView;
         TextView ContendView;
         TextView DateView;
+
+        View containerView;
         public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
             TitleView =itemView.findViewById(R.id.NtextView01);
             ContendView =itemView.findViewById(R.id.NtextView02);
             DateView =itemView.findViewById(R.id.NtextView03);
+            containerView =itemView;
         }
     }
 
@@ -117,7 +119,7 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.note_item, parent, false);
         NoteViewHolder noteViewHolder = new NoteViewHolder(view);
-        return null;
+        return noteViewHolder;
     }
 
     @Override
@@ -130,6 +132,18 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
         holder.TitleView.setText(cursor.getString(1));
         holder.ContendView.setText(cursor.getString(2));
         holder.DateView.setText(cursor.getString(3));
+
+        holder.containerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("AppNote","Clicked");
+                Intent intent = new Intent(view.getContext(),CreateNoteActivity.class);
+                intent.putExtra("id",cursor.getString(0));
+                intent.putExtra("title",cursor.getString(1));
+                intent.putExtra("content",cursor.getString(2));
+                view.getContext().startActivity(intent);
+            }
+        });
 
     }
 
