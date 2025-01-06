@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CreateNoteActivity extends AppCompatActivity {
-
+    String idData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,10 +33,11 @@ public class CreateNoteActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         Intent intent = getIntent();
-       String idData = intent.getStringExtra("id");
-       String titleData = intent.getStringExtra("title");
-       String contentData = intent.getStringExtra("content");
+        idData = intent.getStringExtra("id");
+        String titleData = intent.getStringExtra("title");
+        String contentData = intent.getStringExtra("content");
 
         EditText title =findViewById(R.id.editTextText01);
         EditText contend =findViewById(R.id.editTextText02);
@@ -73,6 +74,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                            SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
+
                             ContentValues contentValues = new ContentValues();
                             contentValues.put("title",title.getText().toString());
                             contentValues.put("content",contend.getText().toString());
@@ -80,8 +82,26 @@ public class CreateNoteActivity extends AppCompatActivity {
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
                             contentValues.put("date_created",simpleDateFormat.format(new Date()));
 
-                            long insertId = sqLiteDatabase.insert("notes", null, contentValues);
-                            Log.i("AppNote", String.valueOf(insertId));
+                            if(idData!=null){
+                                int count = sqLiteDatabase.update("notes",
+                                        contentValues,
+                                        "`id` =?",
+                                        new String[]{idData});
+
+                                Log.i("AppNote", count + " Row Updated !");
+
+
+                            }else {
+
+                                long insertId = sqLiteDatabase.insert(
+                                        "notes",
+                                        null,
+                                        contentValues);
+                                Log.i("AppNote", String.valueOf(insertId));
+
+                            }
+
+
 
                             sqLiteDatabase.close();
                             runOnUiThread(new Runnable() {
