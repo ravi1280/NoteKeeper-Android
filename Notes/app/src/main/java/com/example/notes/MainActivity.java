@@ -127,6 +127,8 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
         Log.i("AppNote",String.valueOf(position));
         cursor.moveToPosition(position);
 
+        String id = cursor.getString(0)
+
         Log.i("AppNote",cursor.getString(1));
 
         holder.TitleView.setText(cursor.getString(1));
