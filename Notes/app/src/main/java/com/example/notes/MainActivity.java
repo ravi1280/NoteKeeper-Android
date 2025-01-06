@@ -43,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
            }
        });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView01);
 
@@ -59,34 +65,26 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-               SQLiteDatabase sqLiteDatabase = sqLiteHelper.getReadableDatabase();
-              Cursor cursor = sqLiteDatabase.query(
-                      "notes",
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      "`id` DESC"
-              );
+                SQLiteDatabase sqLiteDatabase = sqLiteHelper.getReadableDatabase();
+                Cursor cursor = sqLiteDatabase.query(
+                        "notes",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        "`id` DESC"
+                );
 
-               runOnUiThread(new Runnable() {
-                   @Override
-                   public void run() {
-                       NoteAdapter noteAdapter =  new NoteAdapter(cursor);
-                       recyclerView.setAdapter(noteAdapter);
-                   }
-               });
-
-//              while (cursor.moveToNext()){
-//                 String title = cursor.getString(1);
-//                  Log.i("AppNote", String.valueOf(title));
-//              }
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NoteAdapter noteAdapter =  new NoteAdapter(cursor);
+                        recyclerView.setAdapter(noteAdapter);
+                    }
+                });
             }
         }).start();
-
-
     }
 }
 

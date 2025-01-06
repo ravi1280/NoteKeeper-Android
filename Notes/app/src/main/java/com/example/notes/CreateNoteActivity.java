@@ -90,18 +90,13 @@ public class CreateNoteActivity extends AppCompatActivity {
 
                                 Log.i("AppNote", count + " Row Updated !");
 
-
                             }else {
-
                                 long insertId = sqLiteDatabase.insert(
                                         "notes",
                                         null,
                                         contentValues);
                                 Log.i("AppNote", String.valueOf(insertId));
-
                             }
-
-
 
                             sqLiteDatabase.close();
                             runOnUiThread(new Runnable() {
