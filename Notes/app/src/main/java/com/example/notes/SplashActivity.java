@@ -35,18 +35,20 @@ public class SplashActivity extends AppCompatActivity {
         SpringForce springForce=new SpringForce();
         springForce.setStiffness(SpringForce.STIFFNESS_LOW);
         springForce.setDampingRatio(SpringForce.DAMPING_RATIO_HIGH_BOUNCY);
-        springForce.setFinalPosition(600f);
+        springForce.setFinalPosition(700f);
 
         springAnimation.setSpring(springForce);
         springAnimation.start();
-        springAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
-            @Override
-            public void onAnimationEnd(DynamicAnimation animation, boolean canceled, float value, float velocity) {
-                Intent intent = new Intent(SplashActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+
+        new Handler().postDelayed(()->{
+
+
+            Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        },2000);
+
+
 
 
     }
